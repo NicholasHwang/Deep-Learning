@@ -86,6 +86,7 @@ pooling的实现由几种方式，max pooling，average pooling和L2-norm poolin
 在tensorflow中，使用tf.nn.dropout完成该操作，它的参数keep_prob一般设置0.5——来源于上面的AlexNet，即丢弃一半的全连接结果。那么每次训练后，只有一半的结果会进入到后向传播的处理中。
 ## 参考目录
 [A-Beginner's-Guide-To-Understanding-Convolutional-Neural-Networks](https://adeshpande3.github.io/adeshpande3.github.io/A-Beginner's-Guide-To-Understanding-Convolutional-Neural-Networks/)
+
 [LayerParams](https://code.google.com/archive/p/cuda-convnet/wikis/LayerParams.wiki)
 
 
