@@ -2,13 +2,16 @@
 我理解的CNN就是一个模拟人脑认知的网络，通过filter（或者叫kernel）识别数据特征——类比人眼对数据生成电信号，对特征利用各种数学运算以完成区分——模拟人脑中的神经元对电信号的反应，多次重复这个过程以达到识别、认知的目的。
 
 <!-- CNN整体图 -->
-先用几张图来比较形象的观察下CNN的流程
+先用几张图来比较形象的观察下CNN的流程：
+
 ![CNN1](https://www.mathworks.com/content/mathworks/www/en/discovery/convolutional-neural-network/jcr:content/mainParsys/image_copy.adapt.full.high.jpg/1492406018870.jpg)
+
 该图来源于[pic source1](https://www.mathworks.com/content/mathworks/www/en/discovery/convolutional-neural-network/jcr:content/mainParsys/image_copy.adapt.full.high.jpg/1492406018870.jpg)
 
 在这张图上，可以看到左边的一张车的图片输入到CNN后，右边会出来多个识别结果，比如小汽车(car)，卡车(truck)，面包车(van)，自行车(bicycle)等，每个结果会对应一个0到1的概率，概率值越大表示属于这个结果的可能性越大。
 
 ![CNN2](https://www.researchgate.net/profile/B_Mesman/publication/220785200/figure/fig1/AS:340720692023305@1458245551937/Fig-1-An-Example-CNN-architecture-for-a-handwritten-digit-recognition-task.png)
+
 该图来源于[pic source2](https://www.researchgate.net/profile/B_Mesman/publication/220785200/figure/fig1/AS:340720692023305@1458245551937/Fig-1-An-Example-CNN-architecture-for-a-handwritten-digit-recognition-task.png)
 
 在这张图上，形象的表示了特征图(feature map)。
@@ -34,8 +37,10 @@
 卷积运算的核心是filter，又称kernel。根据名字我们能够猜测出，这个核心就是一个过滤器，他把特征过滤出来，然后输入到后续的网络流程中。
 那么怎样实现过滤，怎样对过滤的结果做区分呢？这就是本小节和后面的ReLU、池化层所涉及的。
 #### 卷积的实现
-用一个图来形象的说明，
+用一个图来形象的说明：
+
 ![pic](https://raw.githubusercontent.com/h312903294/MarkdownPicRep/master/convSobel.gif)
+
 该图来源于[Convolutional Neural Networks - Basics](https://mlnotebook.github.io/post/CNN1/)
 
 在tensorflow中，关于convolution的说明在[这里](https://www.tensorflow.org/api_guides/python/nn#Convolution)
@@ -94,6 +99,7 @@ pooling的实现由几种方式，max pooling，average pooling和L2-norm poolin
 ## 全连接层
 ### 全连接运算
 全连接(fully connected)，其实从名字就可以看出这层主要是把前面的所有运算结果全部“链接”在一起。这里有一个图比较形象的表示了这个运算：
+
 ![全连接示意图](https://github.com/h312903294/MarkdownPicRep/raw/master/FCLayer%402x.png)
 
 这一层的目的主要是对之前提取到的特征进行更高一级的提取。比如，通过之前的运算，我们得到了N段圆弧，如果要最终组成一个圆，就需要把这N段圆弧拼装到一起。
@@ -110,5 +116,7 @@ pooling的实现由几种方式，max pooling，average pooling和L2-norm poolin
 [LayerParams](https://code.google.com/archive/p/cuda-convnet/wikis/LayerParams.wiki)
 
 [Must Know Tips/Tricks in Deep Neural Networks (by Xiu-Shen Wei)](http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html)
+
+[《Deep Learning》](http://www.deeplearningbook.org/)
 
 
