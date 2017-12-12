@@ -1,5 +1,25 @@
 # CNN流程简单梳理
 我理解的CNN就是一个模拟人脑认知的网络，通过filter（或者叫kernel）识别数据特征——类比人眼对数据生成电信号，对特征利用各种数学运算以完成区分——模拟人脑中的神经元对电信号的反应，多次重复这个过程以达到识别、认知的目的。
+
+<!-- CNN整体图 -->
+先用几张图来比较形象的观察下CNN的流程
+![CNN1](https://www.mathworks.com/content/mathworks/www/en/discovery/convolutional-neural-network/jcr:content/mainParsys/image_copy.adapt.full.high.jpg/1492406018870.jpg)
+该图来源于[pic source1](https://www.mathworks.com/content/mathworks/www/en/discovery/convolutional-neural-network/jcr:content/mainParsys/image_copy.adapt.full.high.jpg/1492406018870.jpg)
+
+在这张图上，可以看到左边的一张车的图片输入到CNN后，右边会出来多个识别结果，比如小汽车(car)，卡车(truck)，面包车(van)，自行车(bicycle)等，每个结果会对应一个0到1的概率，概率值越大表示属于这个结果的可能性越大。
+
+![CNN2](https://www.researchgate.net/profile/B_Mesman/publication/220785200/figure/fig1/AS:340720692023305@1458245551937/Fig-1-An-Example-CNN-architecture-for-a-handwritten-digit-recognition-task.png)
+该图来源于[pic source2](https://www.researchgate.net/profile/B_Mesman/publication/220785200/figure/fig1/AS:340720692023305@1458245551937/Fig-1-An-Example-CNN-architecture-for-a-handwritten-digit-recognition-task.png)
+
+在这张图上，形象的表示了特征图(feature map)。
+
+通过这两张图，我们能够看出共性的东西：
+**1.** 都有卷积层(convolution layer)，并且卷积层会有多个，卷积层包含两个操作，卷积(convolution)和ReLU。
+**2.** 都有池化层(pooling layer or subsampling layer)，它的输入就是卷积层的输出。但是不能认为每一个卷积层后面就会有一个池化层，可以多个卷积层后接一个池化层。
+**3.** 都有全连接层(fully connected layer)，它就是把前面计算出来的结果两两相乘。需要注意的是，在第一个全连接层的输入处有一个拉平(flatten)的操作，它是把在这层之前的池化层的结果拉平成一个[1, N_Classes]，其中N_Classes就是需要识别的标签的个数。
+
+看过了CNN的内部结构，相当于认识了CNN的“硬件”是怎样构成的，现在我们需要了解下CNN的“软件”是怎样运作的。推荐[A-Beginner's-Guide-To-Understanding-Convolutional-Neural-Networks](https://adeshpande3.github.io/adeshpande3.github.io/A-Beginner's-Guide-To-Understanding-Convolutional-Neural-Networks/)的Training小节。一句话总结就是，CNN的更新权值(weight)的过程叫后向传播(backpropagation)。后向传播由前向传递(forward pass)、损失函数(loss function)、后向传递(backward pass)和权值更新(weight update)四部分组成，后向传播算法的详细介绍请看[《deep learning》](http://www.deeplearningbook.org/)6.5节。
+
 以下均用Google的tensorflow框架做代码演示
 ## 卷积层（Convolutioanl Layer)
 ### 卷积运算
@@ -59,7 +79,7 @@ ReLU，是Rectified Linear Unit的简写，中文名线性整流函数，它的[
 pooling层也叫downsampling层，它的作用是两个：
 **1. 当输入作出少量平移时，pooling能够帮助输入的表示近似不变**
 **2. 保留主要特征同时减少参数和计算量，防止过拟合，提高模型泛华能力**。
-具体可以参考[知乎](https://www.zhihu.com/question/36686900)，更加详细的可以看《deep learnin》的9.3和9.4节。
+具体可以参考[知乎](https://www.zhihu.com/question/36686900)，更加详细的可以看[《deep learning》](http://www.deeplearningbook.org/)的9.3和9.4节。
 
 pooling的实现由几种方式，max pooling，average pooling和L2-norm pooling等，目前一般使用max pooling，即取pool size中的最大值。在tensorflow中的api是tf.nn.maxpool，它的参数中ksize的第二、三个参数上一层filter的宽和高。
 
@@ -84,9 +104,11 @@ pooling的实现由几种方式，max pooling，average pooling和L2-norm poolin
 在全连接层后增加dropout，是为了解决过拟合，在[AlexNet](https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)的4.2节有论述。这篇[blog](http://blog.csdn.net/hjimce/article/details/50413257)我认为说的比较全，从原理到实现都基本涉及到了。还有一篇[blog](http://blog.csdn.net/stdcoutzyx/article/details/49022443)对论文的分析很不错，我很赞同用有性繁殖和无性繁殖来类比dropout的作用，有性繁殖之所以能适应更加复杂的环境，是因为它既能把优良基因传下去，也能让有害基因有概率的传不下去。
 
 在tensorflow中，使用tf.nn.dropout完成该操作，它的参数keep_prob一般设置0.5——来源于上面的AlexNet，即丢弃一半的全连接结果。那么每次训练后，只有一半的结果会进入到后向传播的处理中。
-## 参考目录
+## 参考
 [A-Beginner's-Guide-To-Understanding-Convolutional-Neural-Networks](https://adeshpande3.github.io/adeshpande3.github.io/A-Beginner's-Guide-To-Understanding-Convolutional-Neural-Networks/)
 
 [LayerParams](https://code.google.com/archive/p/cuda-convnet/wikis/LayerParams.wiki)
+
+[Must Know Tips/Tricks in Deep Neural Networks (by Xiu-Shen Wei)](http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html)
 
 
