@@ -8,10 +8,10 @@ import shutil
 N_CLASSES = 2
 IMG_W = 227
 IMG_H = 227
-BATCH_SIZE = 16
+BATCH_SIZE = 128
 CAPACITY = 2000
 MAX_STEP = 10000
-learning_rate = 1e-2
+learning_rate = 1e-4
 
 # def run_training():
 print 'in run_training'

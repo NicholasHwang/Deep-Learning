@@ -91,23 +91,25 @@ def get_test_files(test_dir):
     indexs= [int(i) for i in indexs]
     return  animals, indexs
 
-def get_test_batch(image,index, image_w, image_h, batch_size, capacity):
-    image = tf.cast(image, tf.string) #image list has only file names
-    input_queue = tf.train.slice_input_producer([image, index])
-    index = input_queue[1]
-    image_contents = tf.read_file(input_queue[0])
+def get_test_batch(file_name, image_w, image_h):
+    # image = tf.cast(file_name, tf.string) #image list has only file names
+    # input_queue = tf.train.slice_input_producer([image, index])
+    # index = input_queue[1]
+    image_contents = tf.read_file(file_name)
     image = tf.image.decode_jpeg(image_contents, channels = 3)
     image = tf.cast(image, tf.float32)
     image = tf.image.resize_images(image, [image_h, image_w], method = 
                                    tf.image.ResizeMethod.NEAREST_NEIGHBOR)
     image = tf.image.per_image_standardization(image)
-    image = tf.reshape(image, [image_w, image_h, 3])
-    image_batch, image_index = tf.train.batch([image, index],
-                                 batch_size = batch_size,
-                                 num_threads = 64,
-                                 capacity = capacity)
-    image_index = tf.reshape(image_index, [batch_size])
-    return image_batch, image_index
+    image = tf.reshape(image, [1, image_w, image_h, 3])
+#     image_batch, image_index = tf.train.batch([image, index],
+                                 # batch_size = batch_size,
+                                 # num_threads = 64,
+#                                  capacity = capacity)
+    # image = tf.reshape(image, [batch_size, image_w, image_h, 3])
+    # image_index = tf.reshape(image_index, [batch_size])
+    # return image_batch, image_index
+    return image
 
 '''
 BATCH_SIZE = 2

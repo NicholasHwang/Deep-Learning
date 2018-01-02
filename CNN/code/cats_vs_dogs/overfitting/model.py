@@ -9,7 +9,7 @@ def weight_variable(name, shape, initializer_stddev, wd):
                            dtype = tf.float32,
                            initializer = 
                            tf.truncated_normal_initializer(stddev = initializer_stddev, dtype = tf.float32))
-    #L2 normalization
+    # L2 normalization
     if wd:
         weight_decay = tf.multiply(tf.nn.l2_loss(var), wd, name = 'weight_loss')
         tf.add_to_collection('losses', weight_decay)
@@ -38,7 +38,7 @@ def lrn(data, name):
 def inference(images, batch_size, n_classes, keep_prob):
     with tf.variable_scope('conv1') as scope:
         weights = weight_variable('weights', [11, 11, 3, 96], initializer_stddev, 0.0)
-        biases = biases_variable('biases', [96], 0.1)
+        biases = biases_variable('biases', [96], 0)
         conv1 = conv_operation(images, weights, biases, [1, 4, 4, 1], 'SAME', scope.name)
     
     with tf.variable_scope('pooling1_lrn') as scope:
@@ -47,7 +47,7 @@ def inference(images, batch_size, n_classes, keep_prob):
         
     with tf.variable_scope('conv2') as scope:
         weights = weight_variable('weights', [5, 5, 96, 256], initializer_stddev, 0.0)
-        biases = biases_variable('biases', [256], 0.1)
+        biases = biases_variable('biases', [256], 1)
         conv2 = conv_operation(pool1, weights, biases, [1, 1, 1, 1], 'SAME', scope.name)
 
     with tf.variable_scope('pooling2_lrn') as scope:
@@ -56,17 +56,17 @@ def inference(images, batch_size, n_classes, keep_prob):
         
     with tf.variable_scope('conv3') as scope:
         weights = weight_variable('weights', [3, 3, 256, 384], initializer_stddev, 0.0)
-        biases = biases_variable('biases', [384], 0.1)
+        biases = biases_variable('biases', [384], 0)
         conv3 = conv_operation(pool2, weights, biases, [1, 1, 1, 1], 'SAME', scope.name)
 
     with tf.variable_scope('conv4') as scope:
         weights = weight_variable('weights', [3, 3, 384, 384], initializer_stddev, 0.0)
-        biases = biases_variable('biases', [384], 0.1)
+        biases = biases_variable('biases', [384], 1)
         conv4 = conv_operation(conv3, weights, biases, [1, 1, 1, 1], 'SAME', scope.name)
 
     with tf.variable_scope('conv5') as scope:
         weights = weight_variable('weights', [3, 3, 384, 256], initializer_stddev, 0.0)
-        biases = biases_variable('biases', [256], 0.1)
+        biases = biases_variable('biases', [256], 1)
         conv5 = conv_operation(conv4, weights, biases, [1, 1, 1, 1], 'SAME', scope.name)
 
     with tf.variable_scope('pooling3'):
@@ -76,19 +76,19 @@ def inference(images, batch_size, n_classes, keep_prob):
         reshape = tf.reshape(pool3, shape = [batch_size, -1])
         dim = reshape.get_shape()[1].value
         weights = weight_variable('weights', [dim, 4096], 0.005, weight_decay_rate)
-        biases = biases_variable('biases', [4096], 0.1)
+        biases = biases_variable('biases', [4096], 1)
         local1 = tf.nn.relu(tf.matmul(reshape, weights) + biases, name = scope.name)
         dropout1 = tf.nn.dropout(local1, keep_prob)
 
     with tf.variable_scope('local2') as scope:
         weights = weight_variable('weights', [4096, 4096], 0.005, weight_decay_rate)
-        biases = biases_variable('biases', [4096], 0.1)
+        biases = biases_variable('biases', [4096], 1)
         local2 = tf.nn.relu(tf.matmul(dropout1, weights) + biases, name = scope.name)
         dropout2 = tf.nn.dropout(local2, keep_prob)
 
     with tf.variable_scope('local3') as scope:
         weights = weight_variable('weights', [4096, 1000], 0.005, weight_decay_rate)
-        biases = biases_variable('biases', [1000], 0.1)
+        biases = biases_variable('biases', [1000], 1)
         local3 = tf.nn.relu(tf.matmul(dropout2, weights) + biases, name = scope.name)
         dropout3 = tf.nn.dropout(local3, keep_prob)
 
